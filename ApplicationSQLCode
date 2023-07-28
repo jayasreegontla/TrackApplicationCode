@@ -1,0 +1,65 @@
+-- Product table
+CREATE TABLE Product (
+    product_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    price DECIMAL(10, 2),
+    category VARCHAR(50)
+);
+
+-- Region table
+CREATE TABLE Region (
+    region_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Time period table
+CREATE TABLE TimePeriod (
+    time_period_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Customer table
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255),
+    age INT,
+    loyalty_status VARCHAR(20)
+);
+
+-- Purchase table
+CREATE TABLE Purchase (
+    purchase_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    time_period_id INT NOT NULL,
+    total_purchase_amount DECIMAL(10, 2),
+    FOREIGN KEY (customer_id) REFERENCES Customer (customer_id),
+    FOREIGN KEY (time_period_id) REFERENCES TimePeriod (time_period_id)
+);
+
+-- Purchase product table (junction table for many-to-many relationship)
+CREATE TABLE PurchaseProduct (
+    purchase_id INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (purchase_id, product_id),
+    FOREIGN KEY (purchase_id) REFERENCES Purchase (purchase_id),
+    FOREIGN KEY (product_id) REFERENCES Product (product_id)
+);
+
+-- Product region table (junction table for many-to-many relationship)
+CREATE TABLE ProductRegion (
+    product_id INT NOT NULL,
+    region_id INT NOT NULL,
+    PRIMARY KEY (product_id, region_id),
+    FOREIGN KEY (product_id) REFERENCES Product (product_id),
+    FOREIGN KEY (region_id) REFERENCES Region (region_id)
+);
+
+-- Inventory table
+CREATE TABLE Inventory (
+    inventory_id INT PRIMARY KEY,
+    product_id INT NOT NULL,
+    stock_level INT,
+    FOREIGN KEY (product_id) REFERENCES Product (product_id)
+);
